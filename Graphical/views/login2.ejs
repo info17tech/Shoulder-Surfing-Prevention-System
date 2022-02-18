@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+table, td, th {
+  border: 2px solid black;
+}
+
+table {
+  border-collapse: collapse;
+  width: 20%;
+}
+td {
+  height: 50px;
+  width: 160px;
+  text-align: center;
+  vertical-align: middle;
+}
+input
+{
+width:80px;
+}
+.td-m
+{
+  height: 50px;
+  width: 100px;
+  text-align: center;
+  vertical-align: middle;
+
+}
+.temp
+{
+padding-left:5rem;
+}
+.btn{
+margin:0 1rem;
+}
+</style>
+  <title>Secondary Login</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+
+<div class="container">
+  <h2>Step-2 Login</h2>         
+  <table>
+    <tbody id="some">
+      <% final.forEach(function(element) {%>
+        <tr id='<%=element[0]%>'>
+          <td value='<%=element[1]%>'><b><%=element[1]%></b></td>
+          <td value='<%=element[2]%>'><b><%=element[2]%></b></td>
+          <td bgcolor='<%=element[0]%>'><div class="td-m"></div></td>
+        </tr>
+        <% }); %>
+
+    </tbody>
+  </table>
+  <br>
+<div class="row temp">
+<button onclick="leftOne('<%=color%>')" type="button" class="btn btn-light">Left</button>
+<button onclick="rightOne('<%=color%>')" type="button" class="btn btn-light">Right</button>
+</div>
+<br>
+<div class="row temp">
+<button onclick="upOne()" type="button" class="btn btn-light">Up</button>
+<button onclick="downOne()" type="button" class="btn btn-light">Down</button>
+</div>
+<br>
+<div class="row temp">
+<input type="password" style="font-size:18px;" id="passd" value="" readonly>
+<button onclick="clearOne()" type="button" class="btn btn-light">Clear</button>
+</div>
+<br>
+<div class="row temp">
+<button onclick="submit('<%=user%>')" type="button" class="btn btn-success">Submit</button>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+		integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+		crossorigin="anonymous"></script>
+<script>
+  function upOne() {
+    var tot=document.getElementById("some");
+    var rows=tot.children;
+    var ids=[];
+    for (i = 0; i < rows.length; i++) {
+      ids.push(rows[i].id);
+    }
+    rows[5].setAttribute("id","temp");
+    for(i=4;i >= 0;i--)
+    {
+      rows[i].setAttribute("id",ids[i+1]);
+      var p=rows[i].children;
+      p[2].setAttribute("bgcolor",ids[i+1]);
+    }
+    rows[5].setAttribute("id",ids[0]);
+    var p=rows[5].children;
+    p[2].setAttribute("bgcolor",ids[0]);
+  }
+
+
+  function downOne() {
+    var tot=document.getElementById("some");
+    var rows=tot.children;
+    var ids=[];
+    for (i = 0; i < rows.length; i++) {
+      ids.push(rows[i].id);
+    }
+    rows[0].setAttribute("id","temp");
+    for(i=1;i < rows.length;i++)
+    {
+      rows[i].setAttribute("id",ids[i-1]);
+      var p=rows[i].children;
+      p[2].setAttribute("bgcolor",ids[i-1]);
+    }
+    rows[0].setAttribute("id",ids[5]);
+    var p=rows[0].children;
+    p[2].setAttribute("bgcolor",ids[5]);
+  }
+
+
+  function leftOne(ucolor) {
+    var tot=document.getElementById(ucolor);
+    var rows=tot.children;
+    console.log(rows.length);
+    var this_char=rows[0].getAttribute("value");
+    var text=document.getElementById("passd");
+    var current=text.value;
+    text.setAttribute("value",current+this_char);
+  }
+
+  function rightOne(ucolor) {
+    var tot=document.getElementById(ucolor);
+    var rows=tot.children;
+    console.log(rows.length);
+    var this_char=rows[1].getAttribute("value");
+    console.log(this_char);
+    var text=document.getElementById("passd");
+    var current=text.value;
+    text.setAttribute("value",current+this_char);
+  }
+
+  function clearOne() {
+    var text=document.getElementById("passd");
+    var current=text.value;
+    if(current.length>0)
+    {
+      current=current.slice(0, -1);
+      text.setAttribute("value",current);
+    }
+  }
+
+  async function submit(uname)
+  {
+    var pwd=document.getElementById("passd").value;
+    console.log(pwd);
+    try{
+      let res=await axios.post('/first',{uname,pwd});
+    swal({
+					title: "Logged In Successfully",
+					icon: "success",
+					button: "Ok",
+				}).then(function () {
+					location.replace("/final");
+				});
+    }catch(err){
+        
+        swal({
+					title: "Error!",
+					icon: "error",
+					button: "Ok",
+				});
+      }
+    
+  }
+
+  </script>
+
+
+</body>
+</html>
